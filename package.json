@@ -1,0 +1,23 @@
+{
+  "name": "texty",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start":"node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MasonWray/Texty.git"
+  },
+  "author": "Mason Wray",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MasonWray/Texty/issues"
+  },
+  "homepage": "https://github.com/MasonWray/Texty#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
