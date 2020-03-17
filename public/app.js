@@ -64,6 +64,54 @@ var init_VolumeByContactChart = {
     }
 };
 
+var init_InboudOutboundByTimeChart = {
+    type: 'line',
+    data: {
+        labels: [
+            "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00",
+            "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],
+        datasets: [{
+            label: "Inbound",
+            backgroundColor: "#28a745",
+            borderColor: "#28a745",
+            fill: false,
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+            label: "Outbound",
+            backgroundColor: "#dc3545",
+            borderColor: "#dc3545",
+            fill: false,
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+            label: "Total",
+            backgroundColor: "#474747",
+            borderColor: "#474747",
+            fill: false,
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        }]
+    },
+    options: {
+        responsive: true,
+        legend: {
+            position: 'bottom'
+        },
+        title: {
+            display: true,
+            text: "Inboud/Outbound by Time"
+        }
+    }
+};
+
+var init_VolumeByDateChart = {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: []
+    }
+};
+
 function getRandomColor(string) {
     var hash = 0, i, chr;
     for (i = 0; i < string.length; i++) {
@@ -78,6 +126,8 @@ $(document).ready(function () {
     // init charts
     var InboundOutboundChart = new Chart($("#InboundOutboundChart"), init_InboundOutboundChart);
     var VolumeByContactChart = new Chart($("#VolumeByContactChart"), init_VolumeByContactChart);
+    var InboudOutboundByTimeChart = new Chart($("#InboudOutboundByTimeChart"), init_InboudOutboundByTimeChart);
+    // var VolumeByDateChart = new Chart($("#VolumeByDateChart"), init_VolumeByDateChart);
 
     $("#start").prop('disabled', true)
 
@@ -130,8 +180,12 @@ $(document).ready(function () {
             iteration(0);
 
             function iteration(i) {
+                //Re-render all charts
                 InboundOutboundChart.update();
                 VolumeByContactChart.update();
+                InboudOutboundByTimeChart.update();
+                // VolumeByDateChart.update();
+
                 var message = messages[i];
 
                 // Add message to I/O chart
@@ -168,6 +222,19 @@ $(document).ready(function () {
                 VolumeByContactChart.data.datasets[0].backgroundColor = contacts.map((contact) => { return contact.color })
                 VolumeByContactChart.data.labels = contacts.map((contact) => { return contact.name });
 
+                // Add message to InboudOutboundByTimeChart
+                var d = new Date(message.date * 1);
+                // console.log(`${d} | ${d.getHours()}`)
+                if (message.direction == 'out') {
+                    InboudOutboundByTimeChart.data.datasets[1].data[d.getHours()]++;
+                }
+                else {
+                    InboudOutboundByTimeChart.data.datasets[0].data[d.getHours()]++;
+                }
+                InboudOutboundByTimeChart.data.datasets[2].data[d.getHours()]++;
+
+                // Add message to VolumeByDateChart
+
                 // Update progress bar
                 $("#progress").css("width", `${i / messages.length * 100}%`);
                 $("#progress").text(`${Math.ceil(i / messages.length * 100)}%`)
@@ -180,7 +247,7 @@ $(document).ready(function () {
                 // Call the next iteration
                 if (i + 1 < messages.length) {
                     requestAnimationFrame(function () {
-                        window.setTimeout(iteration, 10, i + 1);
+                        window.setTimeout(iteration, 20, i + 1);
                     });
                 }
             };
