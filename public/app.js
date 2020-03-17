@@ -25,7 +25,7 @@ var init_InboundOutboundChart = {
         },
         title: {
             display: true,
-            text: 'Total Messages'
+            text: 'Inbound/Outbound Messages'
         },
         animation: {
             animateScale: true,
@@ -71,7 +71,7 @@ function getRandomColor(string) {
         hash = ((hash << 5) - hash) + chr;
         hash |= 0;
     }
-    return `hsl(${hash}, 62%, 55%)`;
+    return `hsl(${hash % 360}, 62%, 55%)`;
 }
 
 $(document).ready(function () {
@@ -107,18 +107,15 @@ $(document).ready(function () {
 
     // Process XML File
     $("#start").click(function () {
-        $("#status").text("Loading file...");
+
+        // var d = new Date();
+        // console.log(d)
         var fr = new FileReader();
         fr.onload = function () {
-            $("#status").text("Parsing XML...");
             var xmldoc = $.parseXML(fr.result);
-            $("#status").text("Getting SMS records...");
             var sms = $(xmldoc).find("sms");
 
             // Extract data from XML into memory
-            $("#status").text("Generating data structure...");
-            // console.log(sms[0])
-            // console.log(sms[12])
             for (var i = 0; i < sms.length; i++) {
                 var message = {
                     type: 'sms',
@@ -126,14 +123,10 @@ $(document).ready(function () {
                     date: $(sms[i]).attr("date"),
                     name: $(sms[i]).attr("contact_name"),
                 };
-
                 messages.push(message);
             }
 
             // Process message data into charts
-            $("#status").text("Processing messages...");
-            var count = 0;
-
             iteration(0);
 
             function iteration(i) {
@@ -142,7 +135,6 @@ $(document).ready(function () {
                 var message = messages[i];
 
                 // Add message to I/O chart
-                InboundOutboundChart.options.title.text = `Total Messages: ${i}`;
                 if (message.direction == 'out') {
                     InboundOutboundChart.data.datasets[0].data[1]++
                 }
@@ -178,7 +170,12 @@ $(document).ready(function () {
 
                 // Update progress bar
                 $("#progress").css("width", `${i / messages.length * 100}%`);
-                $("#progress").text(`${Math.floor(i / messages.length * 100)}%`)
+                $("#progress").text(`${Math.ceil(i / messages.length * 100)}%`)
+
+                //Update counter and date
+                $("#counter").text(`(${i + 1}/${messages.length})`);
+                var d = new Date(message.date * 1);
+                $("#date").text(d);
 
                 // Call the next iteration
                 if (i + 1 < messages.length) {

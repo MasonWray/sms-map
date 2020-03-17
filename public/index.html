@@ -25,16 +25,17 @@
             <p>Don't worry, all of your data is processed on this local computer, and is never sent to the server.</p>
             <p><input id="srcfile" type="file" name="file" class="myfile"></p>
             <button id="start" class="btn btn-primary">Start Analysis</button>
-            <!-- <p id="status"></p> -->
             <div class="progress mt-4">
-                <div id="progress" class="progress-bar progress-bar-striped" role="progressbar">
-                </div>
+                <div id="progress" class="progress-bar progress-bar-striped"></div>
             </div>
         </div>
 
+            <h5 id="counter" class="text-center"> (345/7456)</h5>
+            <h5 id="date" class="text-center"> A date and time</h5>
+
         <div class="row">
             <canvas id="InboundOutboundChart" height="40"></canvas>
-            <canvas id="VolumeByContactChart"></canvas>
+            <canvas id="VolumeByContactChart" height="150"></canvas>
         </div>
     </div>
 </body>
