@@ -167,50 +167,18 @@ $(document).ready(function () {
                     });
                 }
                 contacts.sort((a, b) => { return b.data - a.data });
-                VolumeByContactChart.data.datasets[0].data = contacts.map((contact) => {return contact.data})
-                VolumeByContactChart.data.datasets[0].backgroundColor = contacts.map((contact) => {return contact.color})
-                VolumeByContactChart.data.labels = contacts.map((contact) => {return contact.name});
+                VolumeByContactChart.data.datasets[0].data = contacts.map((contact) => { return contact.data })
+                VolumeByContactChart.data.datasets[0].backgroundColor = contacts.map((contact) => { return contact.color })
+                VolumeByContactChart.data.labels = contacts.map((contact) => { return contact.name });
 
+                // Call the next iteration
                 if (i + 1 < messages.length) {
                     requestAnimationFrame(function () {
                         iteration(i + 1);
                     });
                 }
             };
-            // messages.forEach(message => {
-            //     count++;
-
-            //     // update InboundOutboundChart
-            //     InboundOutboundChart.options.title.text = `Total Messages: ${count}`;
-            //     if (message.direction == 'out') {
-            //         InboundOutboundChart.data.datasets[0].data[1]++
-            //     }
-            //     else {
-            //         InboundOutboundChart.data.datasets[0].data[0]++
-            //     }
-            //     InboundOutboundChart.update();
-
-            //     if (count == sms.length) {
-            //         $("#status").text("Done!");
-            //     }
-
-            //     // update VolumeByContactChart
-            //     if (VolumeByContactChart.data.labels.includes(message.name)) {
-            //         VolumeByContactChart.data.datasets[0].data[
-            //             VolumeByContactChart.data.labels.findIndex(name => {
-            //                return name == message.name;
-            //             })
-            //         ]++;
-            //     }
-            //     else {
-            //         VolumeByContactChart.data.labels.push(message.name);
-            //         VolumeByContactChart.data.datasets[0].data.push(1);
-            //         VolumeByContactChart.data.datasets[0].backgroundColor.push(getRandomColor());
-            //     }
-            //     VolumeByContactChart.update();
-            // });
         };
-        // fr.readAsDataURL(document.getElementById('srcfile').files[0]);
         fr.readAsText(document.getElementById('srcfile').files[0]);
     });
 });
