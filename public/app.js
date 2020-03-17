@@ -171,10 +171,14 @@ $(document).ready(function () {
                 VolumeByContactChart.data.datasets[0].backgroundColor = contacts.map((contact) => { return contact.color })
                 VolumeByContactChart.data.labels = contacts.map((contact) => { return contact.name });
 
+                // Update progress bar
+                $("#progress").css("width", `${i / messages.length * 100}%`);
+                $("#progress").text(`${Math.floor(i / messages.length * 100)}%`)
+
                 // Call the next iteration
                 if (i + 1 < messages.length) {
                     requestAnimationFrame(function () {
-                        iteration(i + 1);
+                        window.setTimeout(iteration, 10, i +1);
                     });
                 }
             };
