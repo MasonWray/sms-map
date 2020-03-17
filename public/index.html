@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Texty</title>
+    <title>TexMap</title>
 
     <link rel="stylesheet" href="/bootstrap.css">
     <link rel="stylesheet" href="/app.css">
@@ -18,11 +18,11 @@
 <body>
     <div class="container-fluid py-3">
         <div class="jumbotron text-center p-5">
-            <h1 class="display-4">Hello, Welcome to Texty!</h1>
-            <p class="lead">Texty can analyze your conversations and provide interesting insight into your communication
-                habits. Select a file below to get started.</p>
+            <h1 class="display-4">Hello, Welcome to TexMap!</h1>
+            <p class="lead">This web application can analyze your conversations and provide interesting insight into your communication
+                habits. Select a file below to get started, or click <a>here</a> to see data file requirements.</p>
             <hr class="my-4">
-            <p>Don't worry, all of your data is processed on this local computer, and is never sent to the server.</p>
+            <p>Don't worry, data are processed on this local computer. We don't collect any information about you. This project is just for fun :)</p>
             <p><input id="srcfile" type="file" name="file" class="myfile"></p>
             <button id="start" class="btn btn-primary">Start Analysis</button>
             <div class="progress mt-4">
@@ -34,9 +34,22 @@
         <h5 id="date" class="text-center"></h5>
 
         <div class="row">
-            <canvas id="InboundOutboundChart" height="40"></canvas>
-            <canvas id="VolumeByContactChart" height="80"></canvas>
-            <canvas id="InboudOutboundByTimeChart" height="80"></canvas>
+            <div class="col-lg-6">
+                <canvas id="InboundOutboundChart" height="100"></canvas>
+            </div>
+            <div class="col-lg-6">
+                <canvas id="InboudOutboundByTimeChart" height="100"></canvas>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-10">
+                <canvas id="VolumeByContactChart" height="80"></canvas>
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+        <div class="row">
             <!-- <canvas id="VolumeByDateChart" height="80"></canvas> -->
         </div>
     </div>
