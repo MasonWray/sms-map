@@ -64,9 +64,14 @@ var init_VolumeByContactChart = {
     }
 };
 
-function getRandomColor() {
-    // return `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
-    return `hsl(${Math.floor(Math.random() * 357)}, 62%, 55%)`;
+function getRandomColor(string) {
+    var hash = 0, i, chr;
+    for (i = 0; i < string.length; i++) {
+        chr = string.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0;
+    }
+    return `hsl(${hash}, 62%, 55%)`;
 }
 
 $(document).ready(function () {
@@ -156,7 +161,7 @@ $(document).ready(function () {
                 else {
                     VolumeByContactChart.data.labels.push(message.name);
                     VolumeByContactChart.data.datasets[0].data.push(1);
-                    VolumeByContactChart.data.datasets[0].backgroundColor.push(getRandomColor());
+                    VolumeByContactChart.data.datasets[0].backgroundColor.push(getRandomColor(message.name));
                 }
                 var contacts = new Array();
                 for (var j = 0; j < VolumeByContactChart.data.labels.length; j++) {
@@ -178,7 +183,7 @@ $(document).ready(function () {
                 // Call the next iteration
                 if (i + 1 < messages.length) {
                     requestAnimationFrame(function () {
-                        window.setTimeout(iteration, 10, i +1);
+                        window.setTimeout(iteration, 10, i + 1);
                     });
                 }
             };
