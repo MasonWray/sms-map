@@ -1,12 +1,78 @@
-$(document).ready(function () {
-    var stats = {
-        msg_total: 0,
-        msg_sent: 0,
-        msg_rcvd: 0,
-        contacts: {
+var messages = new Array();
 
+var init_InboundOutboundChart = {
+    type: 'doughnut',
+    data: {
+        datasets: [{
+            data: [
+                0, 0,
+            ],
+            backgroundColor: [
+                '#28a745',
+                '#dc3545'
+            ],
+            label: 'Dataset 1'
+        }],
+        labels: [
+            'Inbound',
+            'Outbound',
+        ]
+    },
+    options: {
+        responsive: true,
+        legend: {
+            position: 'top',
+        },
+        title: {
+            display: true,
+            text: 'Total Messages'
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true,
+            duration: 0
+        },
+        circumference: Math.PI,
+        rotation: -Math.PI
+    }
+};
+
+var init_VolumeByContactChart = {
+    type: 'doughnut',
+    data: {
+        datasets: [{
+            data: [],
+            backgroundColor: [],
+            label: 'Dataset 1'
+        }],
+        labels: []
+    },
+    options: {
+        responsive: true,
+        legend: {
+            position: 'left',
+        },
+        title: {
+            display: true,
+            text: 'Messasge Volume by Contact'
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true,
+            duration: 0
         }
-    };
+    }
+};
+
+function getRandomColor() {
+    // return `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
+    return `hsl(${Math.floor(Math.random() * 357)}, 62%, 55%)`;
+}
+
+$(document).ready(function () {
+    // init charts
+    var InboundOutboundChart = new Chart($("#InboundOutboundChart"), init_InboundOutboundChart);
+    var VolumeByContactChart = new Chart($("#VolumeByContactChart"), init_VolumeByContactChart);
 
     $("#start").prop('disabled', true)
 
@@ -34,43 +100,105 @@ $(document).ready(function () {
         }
     });
 
+    // Process XML File
     $("#start").click(function () {
         $("#status").text("Loading file...");
         var fr = new FileReader();
-        fr.onload = function(){
+        fr.onload = function () {
             $("#status").text("Parsing XML...");
             var xmldoc = $.parseXML(fr.result);
             $("#status").text("Getting SMS records...");
             var sms = $(xmldoc).find("sms");
-            $("#status").text("Scanning SMS records...");
 
-            console.log(sms[0])
-            for(var i = 0; i < sms.length; i++){
-                $("#status").text(`Scanning SMS records (${i}/${sms.length})`);
-                //update total messages count
-                stats.msg_total += 1;
+            // Extract data from XML into memory
+            $("#status").text("Generating data structure...");
+            // console.log(sms[0])
+            // console.log(sms[12])
+            for (var i = 0; i < sms.length; i++) {
+                var message = {
+                    type: 'sms',
+                    direction: ($(sms[i]).attr("type") == '2') ? 'out' : 'in',
+                    date: $(sms[i]).attr("date"),
+                    name: $(sms[i]).attr("contact_name"),
+                };
 
-                //update sent/recieved messages count
-                if($(sms[i]).attr('type') === '2'){
-                    stats.msg_sent += 1;
-                }
-                else if($(sms[i]).attr('type') === '1'){
-                    stats.msg_rcvd += 1;
-                }
-                else{
-                    console.log(`${$(sms[i]).attr('type')} does not equal ${'1'} or ${'2'}`)
-                }
-
-                //make sure contact exists in stats object
-                var exists = false;
-
-                if(!exists){
-                    
-                }
-
+                messages.push(message);
             }
-            $("#status").text("Finished!");
-            console.log(stats)
+
+            // Process message data into charts
+            $("#status").text("Processing messages...");
+            var count = 0;
+
+            iteration(0);
+
+            function iteration(i) {
+                InboundOutboundChart.update();
+                VolumeByContactChart.update();
+                var message = messages[i];
+
+                // Add message to I/O chart
+                InboundOutboundChart.options.title.text = `Total Messages: ${i}`;
+                if (message.direction == 'out') {
+                    InboundOutboundChart.data.datasets[0].data[1]++
+                }
+                else {
+                    InboundOutboundChart.data.datasets[0].data[0]++
+                }
+
+                // Add message to VolumeByContactChart
+                if (VolumeByContactChart.data.labels.includes(message.name)) {
+                    VolumeByContactChart.data.datasets[0].data[
+                        VolumeByContactChart.data.labels.findIndex(name => {
+                            return name == message.name;
+                        })
+                    ]++;
+                }
+                else {
+                    VolumeByContactChart.data.labels.push(message.name);
+                    VolumeByContactChart.data.datasets[0].data.push(1);
+                    VolumeByContactChart.data.datasets[0].backgroundColor.push(getRandomColor());
+                }
+                var contacts = new Array();
+                for()
+
+                if (i + 1 < messages.length) {
+                    requestAnimationFrame(function () {
+                        iteration(i + 1);
+                    });
+                }
+            };
+            // messages.forEach(message => {
+            //     count++;
+
+            //     // update InboundOutboundChart
+            //     InboundOutboundChart.options.title.text = `Total Messages: ${count}`;
+            //     if (message.direction == 'out') {
+            //         InboundOutboundChart.data.datasets[0].data[1]++
+            //     }
+            //     else {
+            //         InboundOutboundChart.data.datasets[0].data[0]++
+            //     }
+            //     InboundOutboundChart.update();
+
+            //     if (count == sms.length) {
+            //         $("#status").text("Done!");
+            //     }
+
+            //     // update VolumeByContactChart
+            //     if (VolumeByContactChart.data.labels.includes(message.name)) {
+            //         VolumeByContactChart.data.datasets[0].data[
+            //             VolumeByContactChart.data.labels.findIndex(name => {
+            //                return name == message.name;
+            //             })
+            //         ]++;
+            //     }
+            //     else {
+            //         VolumeByContactChart.data.labels.push(message.name);
+            //         VolumeByContactChart.data.datasets[0].data.push(1);
+            //         VolumeByContactChart.data.datasets[0].backgroundColor.push(getRandomColor());
+            //     }
+            //     VolumeByContactChart.update();
+            // });
         };
         // fr.readAsDataURL(document.getElementById('srcfile').files[0]);
         fr.readAsText(document.getElementById('srcfile').files[0]);

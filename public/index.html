@@ -11,21 +11,28 @@
 
     <script src="/jquery.js"></script>
     <script src="/bootstrap.js"></script>
+    <script src="/chart.js"></script>
     <script src="/app.js"></script>
 </head>
 
 <body>
-    <div class="jumbotron text-center">
-        <h1 class="display-4">Hello, Welcome to Texty!</h1>
-        <p class="lead">Texty can analyze your conversations and provide interesting insight into your communication
-            habits. Select a file below to get started.</p>
-        <hr class="my-4">
-        <p>Don't worry, all of your data is processed on this local computer, and is never sent to the server.</p>
-        <p><input id="srcfile" type="file" name="file" class="myfile"></p>
-        <button id="start" class="btn btn-primary">Start Analysis</button>
-        <p id="status"></p>
-    </div>
+    <div class="container-fluid py-3">
+        <div class="jumbotron text-center p-5">
+            <h1 class="display-4">Hello, Welcome to Texty!</h1>
+            <p class="lead">Texty can analyze your conversations and provide interesting insight into your communication
+                habits. Select a file below to get started.</p>
+            <hr class="my-4">
+            <p>Don't worry, all of your data is processed on this local computer, and is never sent to the server.</p>
+            <p><input id="srcfile" type="file" name="file" class="myfile"></p>
+            <button id="start" class="btn btn-primary">Start Analysis</button>
+            <p id="status"></p>
+        </div>
 
+        <div class="row">
+            <canvas id="InboundOutboundChart" height="40"></canvas>
+            <canvas id="VolumeByContactChart"></canvas>
+        </div>
+    </div>
 </body>
 
 </html>
