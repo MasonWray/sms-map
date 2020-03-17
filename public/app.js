@@ -159,7 +159,17 @@ $(document).ready(function () {
                     VolumeByContactChart.data.datasets[0].backgroundColor.push(getRandomColor());
                 }
                 var contacts = new Array();
-                for()
+                for (var j = 0; j < VolumeByContactChart.data.labels.length; j++) {
+                    contacts.push({
+                        data: VolumeByContactChart.data.datasets[0].data[j],
+                        color: VolumeByContactChart.data.datasets[0].backgroundColor[j],
+                        name: VolumeByContactChart.data.labels[j]
+                    });
+                }
+                contacts.sort((a, b) => { return b.data - a.data });
+                VolumeByContactChart.data.datasets[0].data = contacts.map((contact) => {return contact.data})
+                VolumeByContactChart.data.datasets[0].backgroundColor = contacts.map((contact) => {return contact.color})
+                VolumeByContactChart.data.labels = contacts.map((contact) => {return contact.name});
 
                 if (i + 1 < messages.length) {
                     requestAnimationFrame(function () {
