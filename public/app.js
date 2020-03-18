@@ -122,13 +122,19 @@ function getRandomColor(string) {
     return `hsl(${hash % 360}, 62%, 55%)`;
 }
 
-$(document).ready(function () {
-    // init charts
-    var InboundOutboundChart = new Chart($("#InboundOutboundChart"), init_InboundOutboundChart);
-    var VolumeByContactChart = new Chart($("#VolumeByContactChart"), init_VolumeByContactChart);
-    var InboudOutboundByTimeChart = new Chart($("#InboudOutboundByTimeChart"), init_InboudOutboundByTimeChart);
-    // var VolumeByDateChart = new Chart($("#VolumeByDateChart"), init_VolumeByDateChart);
+function initCharts() {
+    InboundOutboundChart = new Chart($("#InboundOutboundChart"), init_InboundOutboundChart);
+    VolumeByContactChart = new Chart($("#VolumeByContactChart"), init_VolumeByContactChart);
+    InboudOutboundByTimeChart = new Chart($("#InboudOutboundByTimeChart"), init_InboudOutboundByTimeChart);
+    // VolumeByDateChart = new Chart($("#VolumeByDateChart"), init_VolumeByDateChart);
+}
 
+var InboundOutboundChart
+var VolumeByContactChart
+var InboudOutboundByTimeChart
+var VolumeByDateChart
+
+$(document).ready(function () {
     $("#start").prop('disabled', true)
 
     $("#srcfile").change(function () {
@@ -157,9 +163,7 @@ $(document).ready(function () {
 
     // Process XML File
     $("#start").click(function () {
-
-        // var d = new Date();
-        // console.log(d)
+        initCharts();
         var fr = new FileReader();
         fr.onload = function () {
             var xmldoc = $.parseXML(fr.result);
