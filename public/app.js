@@ -1,5 +1,3 @@
-var messages = new Array();
-
 var init_InboundOutboundChart = {
     type: 'doughnut',
     data: {
@@ -123,12 +121,14 @@ function getRandomColor(string) {
 }
 
 function initCharts() {
+    messages = new Array();
     InboundOutboundChart = new Chart($("#InboundOutboundChart"), init_InboundOutboundChart);
     VolumeByContactChart = new Chart($("#VolumeByContactChart"), init_VolumeByContactChart);
     InboudOutboundByTimeChart = new Chart($("#InboudOutboundByTimeChart"), init_InboudOutboundByTimeChart);
     // VolumeByDateChart = new Chart($("#VolumeByDateChart"), init_VolumeByDateChart);
 }
 
+var messages
 var InboundOutboundChart
 var VolumeByContactChart
 var InboudOutboundByTimeChart
