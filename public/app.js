@@ -62,7 +62,7 @@ var init_VolumeByContactChart = {
     }
 };
 
-var init_InboudOutboundByTimeChart = {
+var init_InboundOutboundByTimeChart = {
     type: 'line',
     data: {
         labels: [
@@ -120,19 +120,9 @@ function getRandomColor(string) {
     return `hsl(${hash % 360}, 62%, 55%)`;
 }
 
-function initCharts() {
-    messages = new Array();
-    InboundOutboundChart = new Chart($("#InboundOutboundChart"), init_InboundOutboundChart);
-    VolumeByContactChart = new Chart($("#VolumeByContactChart"), init_VolumeByContactChart);
-    InboudOutboundByTimeChart = new Chart($("#InboudOutboundByTimeChart"), init_InboudOutboundByTimeChart);
-    // VolumeByDateChart = new Chart($("#VolumeByDateChart"), init_VolumeByDateChart);
-}
-
-var messages
 var InboundOutboundChart
 var VolumeByContactChart
-var InboudOutboundByTimeChart
-var VolumeByDateChart
+var InboundOutboundByTimeChart
 
 $(document).ready(function () {
     $("#start").prop('disabled', true)
@@ -163,7 +153,14 @@ $(document).ready(function () {
 
     // Process XML File
     $("#start").click(function () {
-        initCharts();
+        // initCharts();
+        var messages = new Array();
+        if (InboundOutboundChart) { InboundOutboundChart.destroy(); }
+        InboundOutboundChart = new Chart($("#InboundOutboundChart"), init_InboundOutboundChart);
+        if (VolumeByContactChart) { VolumeByContactChart.destroy(); }
+        VolumeByContactChart = new Chart($("#VolumeByContactChart"), init_VolumeByContactChart);
+        if (InboundOutboundByTimeChart) { InboundOutboundByTimeChart.destroy(); }
+        InboundOutboundByTimeChart = new Chart($("#InboundOutboundByTimeChart"), init_InboundOutboundByTimeChart);
         var fr = new FileReader();
         fr.onload = function () {
             var xmldoc = $.parseXML(fr.result);
@@ -174,7 +171,8 @@ $(document).ready(function () {
                 var message = {
                     type: 'sms',
                     direction: ($(sms[i]).attr("type") == '2') ? 'out' : 'in',
-                    date: $(sms[i]).attr("date"),
+                    // date: $(sms[i]).attr("date"),
+                    date : new Date($(sms[i]).attr("date") * 1),
                     name: $(sms[i]).attr("contact_name"),
                 };
                 messages.push(message);
@@ -187,7 +185,7 @@ $(document).ready(function () {
                 //Re-render all charts
                 InboundOutboundChart.update();
                 VolumeByContactChart.update();
-                InboudOutboundByTimeChart.update();
+                InboundOutboundByTimeChart.update();
                 // VolumeByDateChart.update();
 
                 var message = messages[i];
@@ -226,16 +224,14 @@ $(document).ready(function () {
                 VolumeByContactChart.data.datasets[0].backgroundColor = contacts.map((contact) => { return contact.color })
                 VolumeByContactChart.data.labels = contacts.map((contact) => { return contact.name });
 
-                // Add message to InboudOutboundByTimeChart
-                var d = new Date(message.date * 1);
-                // console.log(`${d} | ${d.getHours()}`)
+                // Add message to InboundOutboundByTimeChart
                 if (message.direction == 'out') {
-                    InboudOutboundByTimeChart.data.datasets[1].data[d.getHours()]++;
+                    InboundOutboundByTimeChart.data.datasets[1].data[message.date.getHours()]++;
                 }
                 else {
-                    InboudOutboundByTimeChart.data.datasets[0].data[d.getHours()]++;
+                    InboundOutboundByTimeChart.data.datasets[0].data[message.date.getHours()]++;
                 }
-                InboudOutboundByTimeChart.data.datasets[2].data[d.getHours()]++;
+                InboundOutboundByTimeChart.data.datasets[2].data[message.date.getHours()]++;
 
                 // Add message to VolumeByDateChart
 
@@ -245,14 +241,16 @@ $(document).ready(function () {
 
                 //Update counter and date
                 $("#counter").text(`(${i + 1}/${messages.length})`);
-                var d = new Date(message.date * 1);
-                $("#date").text(d);
+                $("#date").text(message.date);
 
                 // Call the next iteration
                 if (i + 1 < messages.length) {
                     requestAnimationFrame(function () {
                         window.setTimeout(iteration, 20, i + 1);
                     });
+                }
+                else {
+                    console.log()
                 }
             };
         };
